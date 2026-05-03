@@ -1,0 +1,174 @@
+/* =========================================================
+   LEVEL 10: REFINED EDITORIAL SHOWCASE
+   Deep Ink, Warm Bone, Elegant Image Grids, Minimal Artifacts
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+  /* Palette: Rich, warm, deep */
+  --ink: #111113;
+  --ink-soft: #1A1A1D;
+  --bone: #F4EFEA;
+  --taupe: #8B8682;
+  --lavender: #A59CB8;
+  --border: rgba(244, 239, 234, 0.1);
+  --border-strong: rgba(244, 239, 234, 0.2);
+  
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Manrope', system-ui, sans-serif;
+  
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background-color: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--lavender); color: var(--ink); }
+a { text-decoration: none; color: inherit; }
+button { background: none; border: none; cursor: pointer; font: inherit; }
+
+/* ── Typography ── */
+.witty-serif { font-family: var(--font-serif); font-style: italic; color: var(--lavender); }
+.display-lg { font-family: var(--font-serif); font-size: clamp(3rem, 5vw, 5.5rem); font-weight: 400; line-height: 1.05; }
+.display-md { font-family: var(--font-serif); font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 400; line-height: 1.1; }
+.label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--taupe); }
+.p-large { font-size: clamp(1.125rem, 1.5vw, 1.25rem); color: var(--taupe); line-height: 1.6; max-width: 35rem; }
+
+.container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 clamp(1.5rem, 4vw, 4rem); }
+.section { padding: clamp(8rem, 15vh, 12rem) 0; }
+
+/* ── Navigation ── */
+.nav { padding: 3rem 0; position: fixed; width: 100%; top: 0; z-index: 100; mix-blend-mode: difference; }
+.nav .container { display: flex; justify-content: space-between; align-items: center; }
+.nav-logo { font-family: var(--font-serif); font-style: italic; font-size: 1.75rem; color: #FFF; }
+.nav-links { display: flex; gap: 3rem; }
+.nav-link { font-size: 0.875rem; font-weight: 500; color: #FFF; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6; transition: opacity 0.3s; }
+.nav-link:hover { opacity: 1; }
+
+/* ── Hero ── */
+.hero { min-height: 100vh; display: flex; align-items: center; padding-top: 6rem; position: relative; }
+.hero-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(4rem, 8vw, 6rem); align-items: center; width: 100%; }
+.hero-left { display: flex; flex-direction: column; gap: 2rem; }
+.hero-thesis { font-family: var(--font-serif); font-size: clamp(3rem, 4.5vw, 5rem); line-height: 1.05; font-weight: 400; color: var(--bone); }
+.hero-sub { max-width: 32rem; }
+
+.hero-right { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; }
+.hero-3d-stage { width: 100%; aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+/* Refined, elegant stage glow */
+.stage-glow { position: absolute; width: 60%; height: 60%; border-radius: 50%; background: radial-gradient(circle, var(--lavender) 0%, transparent 60%); filter: blur(80px); opacity: 0.15; z-index: 1; }
+spline-viewer { width: 100%; height: 100%; position: relative; z-index: 2; }
+
+.hero-ripple { position: absolute; bottom: 4rem; left: clamp(1.5rem, 4vw, 4rem); z-index: 10; display: flex; gap: 4rem; align-items: flex-end; }
+.ripple-controls { display: flex; flex-direction: column; gap: 1rem; }
+.ripple-btn { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; color: var(--taupe); letter-spacing: 0.1em; text-align: left; transition: color 0.3s; }
+.ripple-btn.active, .ripple-btn:hover { color: var(--bone); }
+.ripple-display { max-width: 24rem; }
+.r-text { font-family: var(--font-serif); font-style: italic; font-size: 1.5rem; color: var(--lavender); opacity: 0; transform: translateY(10px); transition: all 0.5s var(--ease); }
+.r-text.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Featured Work (Image-Led Editorial Showcase) ── */
+.work-header { margin-bottom: 6rem; display: flex; flex-direction: column; gap: 1rem; }
+.work-gallery { display: flex; flex-direction: column; gap: 12rem; }
+
+.project { display: grid; gap: 4rem; align-items: center; }
+/* Alternating Layouts for visual rhythm */
+.project:nth-child(odd) { grid-template-columns: 1.2fr 0.8fr; }
+.project:nth-child(even) { grid-template-columns: 0.8fr 1.2fr; direction: rtl; }
+.project:nth-child(even) > * { direction: ltr; }
+.project:nth-child(4) { grid-template-columns: 1fr; gap: 2rem; } /* LTI is full width */
+
+/* Graceful Image Placeholder */
+.image-container { position: relative; width: 100%; overflow: hidden; border-radius: 4px; background: var(--ink-soft); border: 1px solid var(--border); }
+.project:nth-child(1) .image-container { aspect-ratio: 4/3; }
+.project:nth-child(2) .image-container { aspect-ratio: 3/4; }
+.project:nth-child(3) .image-container { aspect-ratio: 1/1; }
+.project:nth-child(4) .image-container { aspect-ratio: 21/9; }
+
+.placeholder-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--taupe); font-size: 0.875rem; letter-spacing: 0.05em; font-family: monospace; opacity: 0.5; }
+
+/* The Witty Hover Overlay */
+.witty-overlay {
+  position: absolute; inset: 0; background: rgba(17, 17, 19, 0.8); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; text-align: center; padding: 2rem;
+  opacity: 0; transition: opacity 0.5s var(--ease); z-index: 10;
+}
+.witty-overlay .witty-serif { font-size: clamp(2rem, 3vw, 3.5rem); transform: translateY(10px); transition: transform 0.5s var(--ease); max-width: 25ch; }
+.image-container:hover .witty-overlay { opacity: 1; }
+.image-container:hover .witty-overlay .witty-serif { transform: translateY(0); }
+
+/* Project Typography */
+.project-text { display: flex; flex-direction: column; gap: 1.5rem; }
+.project-meta { font-size: 0.875rem; color: var(--taupe); text-transform: uppercase; letter-spacing: 0.08em; }
+.project-title { font-family: var(--font-serif); font-size: clamp(3rem, 5vw, 5rem); line-height: 1; color: var(--bone); font-weight: 400; }
+.project-desc { font-size: 1.25rem; color: var(--taupe); line-height: 1.6; max-width: 30rem; }
+.btn-case-study { display: inline-flex; align-items: center; margin-top: 1rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--bone); border-bottom: 1px solid var(--border-strong); padding-bottom: 0.25rem; width: fit-content; transition: border-color 0.3s; }
+.btn-case-study:hover { border-color: var(--bone); }
+
+/* ── The Receipts ── */
+.receipts-header { margin-bottom: 6rem; }
+.receipts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4rem; border-top: 1px solid var(--border-strong); padding-top: 4rem; }
+.receipt-item { display: flex; flex-direction: column; gap: 1rem; }
+.receipt-num { font-family: var(--font-serif); font-size: clamp(5rem, 8vw, 8rem); line-height: 0.9; color: var(--bone); font-weight: 400; }
+.receipt-meta { display: flex; flex-direction: column; gap: 0.25rem; }
+.receipt-project { font-size: 0.75rem; color: var(--lavender); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+.receipt-desc { font-size: 1.125rem; color: var(--taupe); max-width: 20rem; }
+
+/* ── Work Routing ── */
+.routing { margin: 8rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; }
+.route-link { padding: 6rem 3rem; display: flex; flex-direction: column; justify-content: center; gap: 1.5rem; border-right: 1px solid var(--border); transition: background 0.4s; cursor: pointer; }
+.route-link:last-child { border-right: none; }
+.route-link:hover { background: var(--ink-soft); }
+.route-title { font-family: var(--font-serif); font-style: italic; font-size: clamp(2.5rem, 3.5vw, 4rem); color: var(--taupe); transition: color 0.4s; }
+.route-link:hover .route-title { color: var(--lavender); }
+
+/* ── About Teaser (Minimalist Artifact) ── */
+.about-teaser { padding-bottom: 4rem; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(4rem, 8vw, 8rem); align-items: center; }
+.about-text { display: flex; flex-direction: column; gap: 2rem; max-width: 32rem; }
+.btn-about { display: inline-flex; align-items: center; padding: 1rem 2rem; border: 1px solid var(--border-strong); border-radius: 100px; font-size: 0.875rem; font-weight: 500; transition: all 0.3s; width: fit-content; margin-top: 1rem; }
+.btn-about:hover { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+
+/* Elegant Minimal Phone Mockup */
+.mockup-container { display: flex; justify-content: center; position: relative; }
+.phone-bezel { 
+  width: 300px; height: 600px; border-radius: 40px; 
+  background: var(--ink); border: 8px solid #222125; 
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
+  position: relative; overflow: hidden; 
+  display: flex; align-items: center; justify-content: center;
+}
+/* Subtle glare */
+.phone-bezel::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 50%);
+  pointer-events: none;
+}
+.mockup-hint { font-family: monospace; font-size: 0.875rem; color: var(--taupe); letter-spacing: 0.05em; }
+
+/* ── Final CTA ── */
+.final-cta { text-align: center; padding-bottom: 10rem; display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+.final-cta .btn-about { background: var(--bone); color: var(--ink); border: none; font-weight: 600; padding: 1.25rem 2.5rem; margin-top: 2rem; }
+.final-cta .btn-about:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .hero-right { order: -1; max-width: 400px; margin: 0 auto; }
+  .hero { min-height: auto; padding-top: 8rem; }
+  .hero-ripple { position: relative; bottom: 0; left: 0; margin-top: 4rem; flex-direction: column; align-items: flex-start; gap: 2rem; }
+  
+  .project:nth-child(n) { grid-template-columns: 1fr; direction: ltr; gap: 2rem; }
+  .receipts-grid { grid-template-columns: 1fr; }
+  .routing { grid-template-columns: 1fr; }
+  .route-link { border-right: none; border-bottom: 1px solid var(--border); padding: 4rem 2rem; }
+  .route-link:last-child { border-bottom: none; }
+  
+  .about-grid { grid-template-columns: 1fr; }
+  .mockup-container { order: -1; }
+}
