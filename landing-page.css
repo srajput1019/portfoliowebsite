@@ -62,7 +62,7 @@ button { background: none; border: none; cursor: pointer; font: inherit; }
 .hero-3d-stage { width: 100%; aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
 /* Refined, elegant stage glow */
 .stage-glow { position: absolute; width: 60%; height: 60%; border-radius: 50%; background: radial-gradient(circle, var(--lavender) 0%, transparent 60%); filter: blur(80px); opacity: 0.15; z-index: 1; }
-spline-viewer { width: 100%; height: 100%; position: relative; z-index: 2; }
+spline-viewer { display: block; width: 100%; height: 100%; position: relative; z-index: 2; }
 
 .hero-ripple { position: absolute; bottom: 4rem; left: clamp(1.5rem, 4vw, 4rem); z-index: 10; display: flex; gap: 4rem; align-items: flex-end; }
 .ripple-controls { display: flex; flex-direction: column; gap: 1rem; }

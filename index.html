@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shrutika Rajput | Design Strategist</title>
   <link rel="stylesheet" href="./landing-page.css" />
-  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.3/build/spline-viewer.js"></script>
+  <link rel="stylesheet" href="./orb.css" />
 </head>
 <body>
 
@@ -27,7 +27,7 @@
       <div class="hero-left gs-fade-up">
         <div class="label" style="margin-bottom: 1.5rem;">Product Designer · AI Strategist · Systems Thinker</div>
         <h1 class="hero-thesis">
-          Every decision I make is designed to radiate through the user, the system, and the strategy that connects them.
+          Every decision I make is designed to radiate through the <span class="thesis-word" data-ring="user">user</span>, the <span class="thesis-word" data-ring="system">system</span>, and the <span class="thesis-word" data-ring="strategy">strategy</span> that connects them.
         </h1>
         <p class="p-large hero-sub" style="margin-top: 1.5rem;">
           I design human-centered AI, product experiences, and strategic systems that make complexity usable.
@@ -37,8 +37,245 @@
       <div class="hero-right gs-fade-up">
         <div class="hero-3d-stage">
           <div class="stage-glow"></div>
-          <spline-viewer url="/scene.splinecode" loading-anim-type="spinner"></spline-viewer>
+          <div class="orb">
+            <svg class="orb-svg" viewBox="-380 -380 760 760" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <!-- Sphere gradient for the half-submerged blob -->
+                <radialGradient id="orb-sphere" cx="38%" cy="22%" r="80%">
+                  <stop offset="0%"   stop-color="#ffffff"/>
+                  <stop offset="22%"  stop-color="#f1f1f4"/>
+                  <stop offset="55%"  stop-color="#b0b0b8"/>
+                  <stop offset="88%"  stop-color="#4d4d55"/>
+                  <stop offset="100%" stop-color="#1a1a20"/>
+                </radialGradient>
+
+                <!-- Bloom for the sphere edge (real glow, not box-shadow) -->
+                <filter id="orb-bloom" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="6" result="b1"/>
+                  <feGaussianBlur stdDeviation="14" result="b2"/>
+                  <feMerge>
+                    <feMergeNode in="b2"/>
+                    <feMergeNode in="b1"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+
+                <!-- Mask: top half of the sphere, sharp cut at the disc plane.
+                     Solar-system metaphor — labels passing on the back half of
+                     their orbit (y < 0) are obscured by the sphere; labels on
+                     the front half (y > 0) are NOT obscured because the mask
+                     is fully transparent below the disc plane. The 8-unit
+                     gradient zone gives a soft meniscus edge without bleeding
+                     into the front half far enough to dim labels there. -->
+                <linearGradient id="orb-sphere-mask" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stop-color="#ffffff" stop-opacity="1"/>
+                  <stop offset="48%"  stop-color="#ffffff" stop-opacity="1"/>
+                  <stop offset="52%"  stop-color="#ffffff" stop-opacity="0"/>
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                </linearGradient>
+                <mask id="orb-sphere-clip">
+                  <rect x="-100" y="-100" width="200" height="200" fill="url(#orb-sphere-mask)"/>
+                </mask>
+
+                <!-- Orbit paths used by both particles and orbiting labels -->
+                <path id="orbit-path-user"     d="M 120 0 a 120 30 0 1 1 -240 0 a 120 30 0 1 1 240 0"/>
+                <path id="orbit-path-system"   d="M 200 0 a 200 50 0 1 1 -400 0 a 200 50 0 1 1 400 0"/>
+                <path id="orbit-path-strategy" d="M 280 0 a 280 70 0 1 1 -560 0 a 280 70 0 1 1 560 0"/>
+              </defs>
+
+              <!-- Background stars (three phase pools, tinted lavender/bone) -->
+              <g class="orb-stars" aria-hidden="true">
+                <circle cx="-340" cy="-240" r="1.5" class="s-a"/>
+                <circle cx="-280" cy="-310" r="1"   class="s-b s-blue"/>
+                <circle cx="-210" cy="-280" r="1.2" class="s-c"/>
+                <circle cx="-130" cy="-330" r="0.9" class="s-a"/>
+                <circle cx="-50"  cy="-310" r="1.4" class="s-b"/>
+                <circle cx="40"   cy="-340" r="1.1" class="s-c s-blue"/>
+                <circle cx="120"  cy="-290" r="1"   class="s-a"/>
+                <circle cx="200"  cy="-320" r="1.3" class="s-b"/>
+                <circle cx="280"  cy="-280" r="1.1" class="s-c"/>
+                <circle cx="350"  cy="-200" r="1.4" class="s-a s-blue"/>
+                <circle cx="-360" cy="-150" r="1"   class="s-b"/>
+                <circle cx="360"  cy="-100" r="1.2" class="s-c"/>
+                <circle cx="-370" cy="-30"  r="0.9" class="s-a"/>
+                <circle cx="370"  cy="20"   r="1.3" class="s-b s-blue"/>
+                <circle cx="-360" cy="90"   r="1.1" class="s-c"/>
+                <circle cx="365"  cy="110"  r="1.2" class="s-a"/>
+                <circle cx="-310" cy="180"  r="1"   class="s-b"/>
+                <circle cx="320"  cy="190"  r="1.4" class="s-c s-blue"/>
+                <circle cx="-240" cy="270"  r="1.1" class="s-a"/>
+                <circle cx="-140" cy="300"  r="0.9" class="s-b"/>
+                <circle cx="-30"  cy="320"  r="1.3" class="s-c"/>
+                <circle cx="70"   cy="315"  r="1"   class="s-a s-blue"/>
+                <circle cx="180"  cy="295"  r="1.2" class="s-b"/>
+                <circle cx="270"  cy="270"  r="1.1" class="s-c"/>
+                <circle cx="0"    cy="-360" r="1.4" class="s-a"/>
+                <circle cx="-200" cy="200"  r="0.9" class="s-b"/>
+                <circle cx="220"  cy="220"  r="0.9" class="s-c s-blue"/>
+              </g>
+
+              <!-- Constellation lines (back layer — behind the sphere). Eight
+                   thin segments at four angles, each split into a User↔System
+                   inner segment and a System↔Strategy outer segment. Default
+                   opacity 0.05 (latent); brightens by data-pair on selection. -->
+              <g class="orb-constellation">
+                <!-- θ = 25° -->
+                <line class="cline" data-pair="user-system"     x1="108.7" y1="-12.7" x2="181.2" y2="-21.2"/>
+                <line class="cline" data-pair="system-strategy" x1="181.2" y1="-21.2" x2="253.7" y2="-29.6"/>
+                <!-- θ = 110° -->
+                <line class="cline" data-pair="user-system"     x1="-41.0" y1="-28.2" x2="-68.4" y2="-47.0"/>
+                <line class="cline" data-pair="system-strategy" x1="-68.4" y1="-47.0" x2="-95.8" y2="-65.8"/>
+                <!-- θ = 200° -->
+                <line class="cline" data-pair="user-system"     x1="-112.8" y1="10.3" x2="-188.0" y2="17.1"/>
+                <line class="cline" data-pair="system-strategy" x1="-188.0" y1="17.1" x2="-263.2" y2="24.0"/>
+                <!-- θ = 290° -->
+                <line class="cline" data-pair="user-system"     x1="41.0"  y1="28.2"  x2="68.4"  y2="47.0"/>
+                <line class="cline" data-pair="system-strategy" x1="68.4"  y1="47.0"  x2="95.8"  y2="65.8"/>
+              </g>
+
+              <!-- Atmospheric glow — large diffuse ellipse behind everything,
+                   gives the disc plane a sense of luminous depth without
+                   creating a panel-darkening rectangle. -->
+              <ellipse class="orb-atmosphere" cx="0" cy="0" rx="320" ry="220"/>
+
+              <!-- BACK ARCS — top half of each ring. Eleven rings total:
+                   3 main labeled rings (User/System/Strategy) + 8 thin
+                   decorative texture rings interleaved between them, so
+                   the disc reads as a continuous tilted surface, not three
+                   isolated bands. The wave cascades through ALL of them. -->
+              <g class="orb-rings-back">
+                <path class="ring ring--texture" style="animation-delay: 0s"    d="M -82 0  A 82 21  0 0 1 82 0"/>
+                <path class="ring ring--texture" style="animation-delay: -.2s"  d="M -100 0 A 100 25 0 0 1 100 0"/>
+                <path class="ring ring--user"     data-ring="user"     style="animation-delay: -.4s"  d="M -120 0 A 120 30 0 0 1 120 0"/>
+                <path class="ring ring--texture" style="animation-delay: -.6s"  d="M -142 0 A 142 36 0 0 1 142 0"/>
+                <path class="ring ring--texture" style="animation-delay: -.8s"  d="M -170 0 A 170 42 0 0 1 170 0"/>
+                <path class="ring ring--system"   data-ring="system"   style="animation-delay: -1s"   d="M -200 0 A 200 50 0 0 1 200 0"/>
+                <path class="ring ring--texture" style="animation-delay: -1.2s" d="M -228 0 A 228 57 0 0 1 228 0"/>
+                <path class="ring ring--texture" style="animation-delay: -1.4s" d="M -255 0 A 255 64 0 0 1 255 0"/>
+                <path class="ring ring--strategy" data-ring="strategy" style="animation-delay: -1.6s" d="M -280 0 A 280 70 0 0 1 280 0"/>
+                <path class="ring ring--texture" style="animation-delay: -1.8s" d="M -305 0 A 305 76 0 0 1 305 0"/>
+                <path class="ring ring--texture" style="animation-delay: -2s"   d="M -330 0 A 330 82 0 0 1 330 0"/>
+              </g>
+
+              <!-- Click ripple — single ellipse driven from JS -->
+              <ellipse id="orb-click-ripple" class="click-ripple" cx="0" cy="0" rx="120" ry="30"/>
+
+              <!-- Soft halo behind the sphere — picks up the active accent -->
+              <ellipse class="orb-sphere-halo" cx="0" cy="-12" rx="86" ry="56"/>
+
+              <!-- Orbiting ring labels — RENDERED BEFORE the sphere so that
+                   on the back half of their orbit (above the disc plane)
+                   they pass behind the sphere and are obscured. On the
+                   front half (below the disc plane) the sphere's mask is
+                   transparent there, so labels remain visible. -->
+              <g class="orb-ring-labels">
+                <g class="ring-label" data-ring="user" tabindex="0" role="button" aria-label="Activate User ring">
+                  <animateMotion dur="90s" repeatCount="indefinite" rotate="0">
+                    <mpath href="#orbit-path-user"/>
+                  </animateMotion>
+                  <rect class="ring-label-bg" x="-40" y="-17" width="80" height="34" rx="17"/>
+                  <text class="ring-label-text" x="0" y="6" text-anchor="middle">User</text>
+                </g>
+                <g class="ring-label" data-ring="system" tabindex="0" role="button" aria-label="Activate System ring">
+                  <animateMotion dur="120s" repeatCount="indefinite" rotate="0" begin="-30s">
+                    <mpath href="#orbit-path-system"/>
+                  </animateMotion>
+                  <rect class="ring-label-bg" x="-48" y="-17" width="96" height="34" rx="17"/>
+                  <text class="ring-label-text" x="0" y="6" text-anchor="middle">System</text>
+                </g>
+                <g class="ring-label" data-ring="strategy" tabindex="0" role="button" aria-label="Activate Strategy ring">
+                  <animateMotion dur="150s" repeatCount="indefinite" rotate="0" begin="-60s">
+                    <mpath href="#orbit-path-strategy"/>
+                  </animateMotion>
+                  <rect class="ring-label-bg" x="-54" y="-17" width="108" height="34" rx="17"/>
+                  <text class="ring-label-text" x="0" y="6" text-anchor="middle">Strategy</text>
+                </g>
+              </g>
+
+              <!-- Half-submerged sphere — RENDERED AFTER the orbiting labels
+                   so it occludes them when they pass behind. The linear
+                   gradient mask fades the bottom half so the disc plane
+                   reads as the surface the sphere is sitting in. -->
+              <g class="orb-sphere" mask="url(#orb-sphere-clip)">
+                <circle class="orb-sphere-body" cx="0" cy="0" r="62" fill="url(#orb-sphere)"/>
+                <!-- Specular highlight -->
+                <ellipse class="orb-sphere-spec" cx="-15" cy="-30" rx="14" ry="6" fill="rgba(255,255,255,0.85)"/>
+                <!-- Eyes — vertical ovals matching the reference -->
+                <ellipse class="orb-sphere-eye" cx="-16" cy="-6" rx="5.5" ry="9"/>
+                <ellipse class="orb-sphere-eye" cx="16"  cy="-6" rx="5.5" ry="9"/>
+              </g>
+
+              <!-- FRONT ARCS — matching set, bottom halves. -->
+              <g class="orb-rings-front">
+                <path class="ring ring--texture" style="animation-delay: 0s"    d="M -82 0  A 82 21  0 0 0 82 0"/>
+                <path class="ring ring--texture" style="animation-delay: -.2s"  d="M -100 0 A 100 25 0 0 0 100 0"/>
+                <path class="ring ring--user"     data-ring="user"     style="animation-delay: -.4s"  d="M -120 0 A 120 30 0 0 0 120 0"/>
+                <path class="ring ring--texture" style="animation-delay: -.6s"  d="M -142 0 A 142 36 0 0 0 142 0"/>
+                <path class="ring ring--texture" style="animation-delay: -.8s"  d="M -170 0 A 170 42 0 0 0 170 0"/>
+                <path class="ring ring--system"   data-ring="system"   style="animation-delay: -1s"   d="M -200 0 A 200 50 0 0 0 200 0"/>
+                <path class="ring ring--texture" style="animation-delay: -1.2s" d="M -228 0 A 228 57 0 0 0 228 0"/>
+                <path class="ring ring--texture" style="animation-delay: -1.4s" d="M -255 0 A 255 64 0 0 0 255 0"/>
+                <path class="ring ring--strategy" data-ring="strategy" style="animation-delay: -1.6s" d="M -280 0 A 280 70 0 0 0 280 0"/>
+                <path class="ring ring--texture" style="animation-delay: -1.8s" d="M -305 0 A 305 76 0 0 0 305 0"/>
+                <path class="ring ring--texture" style="animation-delay: -2s"   d="M -330 0 A 330 82 0 0 0 330 0"/>
+              </g>
+
+              <!-- Particles. Three sets:
+                   - main rings (User/System/Strategy) at full opacity
+                   - ambient particles riding the texture-ring orbits
+                     for density that matches the reference -->
+              <g class="orb-orbits">
+                <!-- Main rings -->
+                <circle class="orbit orbit--user"     r="2.6" style="--offset:-0s"/>
+                <circle class="orbit orbit--user"     r="2.2" style="--offset:-5s"/>
+                <circle class="orbit orbit--system"   r="3"   style="--offset:-2s"/>
+                <circle class="orbit orbit--system"   r="2.4" style="--offset:-9s"/>
+                <circle class="orbit orbit--system"   r="2"   style="--offset:-15s"/>
+                <circle class="orbit orbit--strategy" r="3.2" style="--offset:-3s"/>
+                <circle class="orbit orbit--strategy" r="2.6" style="--offset:-12s"/>
+                <circle class="orbit orbit--strategy" r="2"   style="--offset:-22s"/>
+
+                <!-- Ambient particles on texture orbits (lower opacity) -->
+                <circle class="orbit orbit--tx-100" r="1.5" style="--offset:-2s"/>
+                <circle class="orbit orbit--tx-100" r="1.3" style="--offset:-12s"/>
+                <circle class="orbit orbit--tx-142" r="1.6" style="--offset:-4s"/>
+                <circle class="orbit orbit--tx-142" r="1.2" style="--offset:-13s"/>
+                <circle class="orbit orbit--tx-170" r="1.5" style="--offset:-6s"/>
+                <circle class="orbit orbit--tx-170" r="1.3" style="--offset:-19s"/>
+                <circle class="orbit orbit--tx-228" r="1.6" style="--offset:-8s"/>
+                <circle class="orbit orbit--tx-228" r="1.3" style="--offset:-21s"/>
+                <circle class="orbit orbit--tx-255" r="1.4" style="--offset:-3s"/>
+                <circle class="orbit orbit--tx-255" r="1.2" style="--offset:-26s"/>
+                <circle class="orbit orbit--tx-305" r="1.6" style="--offset:-7s"/>
+                <circle class="orbit orbit--tx-305" r="1.3" style="--offset:-24s"/>
+                <circle class="orbit orbit--tx-330" r="1.5" style="--offset:-10s"/>
+                <circle class="orbit orbit--tx-330" r="1.2" style="--offset:-30s"/>
+              </g>
+
+              <!-- Ring labels rendered earlier in the SVG (before the sphere)
+                   so they hide behind it on the back half of their orbit. -->
+
+            </svg>
+          </div>
         </div>
+
+        <!-- Strategy detail card — updates on ring select. Crossfades
+             between three states (User / System / Strategy). The card
+             is intentionally borderless; only a leading rule and a
+             tabular numeric counter mark the section. -->
+        <aside class="orb-detail" aria-live="polite">
+          <div class="orb-detail-meta">
+            <span class="orb-detail-rule"></span>
+            <span class="orb-detail-label">User</span>
+            <span class="orb-detail-num">01 / 03</span>
+          </div>
+          <p class="orb-detail-body">
+            I design every system as if the person using it has their job on
+            the line. Real research, real friction, real-world consequence —
+            that's where the design starts.
+          </p>
+          <a class="orb-detail-link" href="#work">View user-centered work →</a>
+        </aside>
       </div>
     </div>
 
@@ -246,21 +483,257 @@
         scrollTrigger: { trigger: '.receipts-grid', start: 'top 80%' }
       });
 
-      const tabs = document.querySelectorAll('.ripple-btn');
+      // ---------------------------------------------------------------
+      // Unified ring state — orbiting labels (in the SVG), ripple-btn
+      // triad (below the hero), and the strategy detail card all share
+      // one source of truth. Setting a ring active updates each UI,
+      // fires a one-shot ripple at that ring's perimeter, cycles the
+      // existing micro-quote text, and crossfades the detail card.
+      // ---------------------------------------------------------------
+      const RING_GEOMETRY = {
+        user:     { rx: 120, ry: 30 },
+        system:   { rx: 200, ry: 50 },
+        strategy: { rx: 280, ry: 70 },
+      };
+
+      const RING_ACCENTS = {
+        user:     'oklch(85% 0.04 80)',
+        system:   'oklch(75% 0.06 290)',
+        strategy: 'oklch(55% 0.07 270)',
+      };
+
+      const RING_DETAIL = {
+        user: {
+          label: 'User',
+          num:   '01 / 03',
+          body:  "I design every system as if the person using it has their job on the line. Real research, real friction, real-world consequence — that's where the design starts.",
+          link:  'View user-centered work →',
+        },
+        system: {
+          label: 'System',
+          num:   '02 / 03',
+          body:  "Once a decision is made, the system has to remember it. I architect product surfaces that stay coherent as teams change, scope drifts, and complexity multiplies.",
+          link:  'View system architecture →',
+        },
+        strategy: {
+          label: 'Strategy',
+          num:   '03 / 03',
+          body:  "Strategy is the constraint that survives reality. I work with leaders to set the bet, then make it legible enough that everyone shipping toward it can hold it in their head.",
+          link:  'View strategy work →',
+        },
+      };
+
+      const orb = document.querySelector('.orb');
+      const ringLabels = orb ? Array.from(orb.querySelectorAll('.ring-label')) : [];
+      const ripples = document.querySelectorAll('.ripple-btn');
       const rippleText = document.getElementById('ripple-text');
-      
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
+      const microByName = {};
+      ripples.forEach((btn) => {
+        const name = (btn.textContent || '').trim().toLowerCase();
+        microByName[name] = btn.getAttribute('data-micro');
+      });
+      const clickRipple = orb ? orb.querySelector('#orb-click-ripple') : null;
+      const thesisWords = Array.from(document.querySelectorAll('.thesis-word'));
+      const sphereEyes = orb ? Array.from(orb.querySelectorAll('.orb-sphere-eye')) : [];
+      const sphereBody = orb ? orb.querySelector('.orb-sphere-body') : null;
+
+      const detail     = document.querySelector('.orb-detail');
+      const detailLbl  = detail && detail.querySelector('.orb-detail-label');
+      const detailNum  = detail && detail.querySelector('.orb-detail-num');
+      const detailBody = detail && detail.querySelector('.orb-detail-body');
+      const detailLink = detail && detail.querySelector('.orb-detail-link');
+
+      let activeRing = null;
+      let eyeTrackRaf = 0;
+
+      const playClickRipple = (name) => {
+        if (!clickRipple) return;
+        const geom = RING_GEOMETRY[name];
+        if (!geom) return;
+        clickRipple.setAttribute('rx', geom.rx);
+        clickRipple.setAttribute('ry', geom.ry);
+        clickRipple.animate(
+          [
+            { transform: 'scale(1)',   opacity: 0.85 },
+            { transform: 'scale(2.4)', opacity: 0.22, offset: 0.4 },
+            { transform: 'scale(4.0)', opacity: 0 },
+          ],
+          { duration: 760, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
+        );
+      };
+
+      const updateDetail = (name) => {
+        if (!detail) return;
+        const data = name && RING_DETAIL[name];
+        if (!data) return; // keep last state when deselecting
+        detail.classList.add('is-fading');
+        setTimeout(() => {
+          detail.dataset.ring = name;
+          if (detailLbl)  detailLbl.textContent  = data.label;
+          if (detailNum)  detailNum.textContent  = data.num;
+          if (detailBody) detailBody.textContent = data.body;
+          if (detailLink) detailLink.textContent = data.link;
+          detail.classList.remove('is-fading');
+        }, 240);
+      };
+
+      // Eye tracking — eyes glance toward the currently active label.
+      // rAF loop reads the label's animated position each frame and
+      // applies a small (≤2.4 viewBox unit) offset to both eye <ellipse>s.
+      const updateEyeTarget = () => {
+        if (!sphereBody || !sphereEyes.length) return;
+        if (!activeRing) {
+          sphereEyes.forEach((e) => {
+            e.style.setProperty('--eye-tx', '0');
+            e.style.setProperty('--eye-ty', '0');
+          });
+          return;
+        }
+        const targetLabel = orb.querySelector('.ring-label[data-ring="' + activeRing + '"]');
+        if (!targetLabel) return;
+        const labelBox = targetLabel.getBoundingClientRect();
+        const sphereBox = sphereBody.getBoundingClientRect();
+        const dx = (labelBox.left + labelBox.width / 2) - (sphereBox.left + sphereBox.width / 2);
+        const dy = (labelBox.top + labelBox.height / 2) - (sphereBox.top + sphereBox.height / 2);
+        const len = Math.sqrt(dx * dx + dy * dy);
+        if (len < 1) return;
+        const MAX = 2.4;
+        const tx = (dx / len) * MAX;
+        const ty = (dy / len) * MAX;
+        sphereEyes.forEach((e) => {
+          e.style.setProperty('--eye-tx', tx.toFixed(2) + 'px');
+          e.style.setProperty('--eye-ty', ty.toFixed(2) + 'px');
+        });
+        eyeTrackRaf = requestAnimationFrame(updateEyeTarget);
+      };
+
+      const startEyeTracking = () => {
+        cancelAnimationFrame(eyeTrackRaf);
+        eyeTrackRaf = requestAnimationFrame(updateEyeTarget);
+      };
+      const stopEyeTracking = () => {
+        cancelAnimationFrame(eyeTrackRaf);
+        sphereEyes.forEach((e) => {
+          e.style.setProperty('--eye-tx', '0');
+          e.style.setProperty('--eye-ty', '0');
+        });
+      };
+
+      const setActive = (name, opts) => {
+        const userTriggered = !(opts && opts.silent);
+        // Toggle off when a user re-clicks the same ring (auto-cycle never toggles)
+        if (userTriggered && activeRing === name) name = null;
+        activeRing = name;
+
+        if (orb) {
+          orb.classList.remove('is-active--user', 'is-active--system', 'is-active--strategy');
+          if (name) orb.classList.add('is-active--' + name);
+
+          // Decision cascade — re-trigger the strobe + flare animations
+          // by removing and re-adding the .is-cascading class on next frame.
+          orb.classList.remove('is-cascading');
+          if (name) {
+            // Force reflow so the animation restarts cleanly
+            void orb.offsetWidth;
+            orb.classList.add('is-cascading');
+            setTimeout(() => orb.classList.remove('is-cascading'), 950);
+          }
+        }
+
+        // Active accent on the detail card so its connector picks up the hue
+        if (detail) {
+          detail.style.setProperty('--active', name ? RING_ACCENTS[name] : 'transparent');
+        }
+
+        // Thesis-word linkage — highlight the matching word in the H1
+        thesisWords.forEach((w) => {
+          w.classList.toggle('is-active', w.dataset.ring === name);
+        });
+
+        // Sync ripple-btn state + the micro-quote
+        ripples.forEach((btn) => {
+          const btnName = (btn.textContent || '').trim().toLowerCase();
+          btn.classList.toggle('active', btnName === name);
+        });
+        if (rippleText && name && microByName[name]) {
           rippleText.classList.remove('visible');
-          tabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          
           setTimeout(() => {
-            rippleText.textContent = tab.getAttribute('data-micro');
+            rippleText.textContent = microByName[name];
             rippleText.classList.add('visible');
-          }, 300);
+          }, 220);
+        }
+
+        if (name) {
+          playClickRipple(name);
+          updateDetail(name);
+          startEyeTracking();
+        } else {
+          stopEyeTracking();
+        }
+
+        if (orb) {
+          orb.dispatchEvent(new CustomEvent('ring:select', { detail: { ring: name } }));
+        }
+      };
+
+      // Orbiting SVG labels → state (click + Enter/Space for keyboard)
+      ringLabels.forEach((label) => {
+        const handler = () => setActive(label.dataset.ring);
+        label.addEventListener('click', handler);
+        label.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handler();
+          }
         });
       });
+
+      // Ripple-btn triad below the hero → state
+      ripples.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const name = (btn.textContent || '').trim().toLowerCase();
+          setActive(name);
+        });
+      });
+
+      // Boot with whichever ripple-btn was pre-marked .active
+      const preActive = document.querySelector('.ripple-btn.active');
+      if (preActive) {
+        const name = (preActive.textContent || '').trim().toLowerCase();
+        if (orb && RING_GEOMETRY[name]) {
+          activeRing = name;
+          orb.classList.add('is-active--' + name);
+          if (detail) detail.style.setProperty('--active', RING_ACCENTS[name]);
+          thesisWords.forEach((w) => w.classList.toggle('is-active', w.dataset.ring === name));
+          startEyeTracking();
+        }
+      }
+
+      // ---------------------------------------------------------------
+      // Auto-cycle — until the user clicks anything, the orb cycles
+      // User → System → Strategy → User on a 5s beat. Stops permanently
+      // on first user interaction so it never fights the user's choice.
+      // ---------------------------------------------------------------
+      const CYCLE_ORDER = ['user', 'system', 'strategy'];
+      const CYCLE_INTERVAL_MS = 5000;
+      let autoCycling = true;
+      let cycleIndex = CYCLE_ORDER.indexOf(activeRing);
+      if (cycleIndex < 0) cycleIndex = 0;
+
+      const tickCycle = () => {
+        if (!autoCycling) return;
+        cycleIndex = (cycleIndex + 1) % CYCLE_ORDER.length;
+        setActive(CYCLE_ORDER[cycleIndex], { silent: true });
+      };
+      let cycleTimer = setInterval(tickCycle, CYCLE_INTERVAL_MS);
+
+      const stopAutoCycle = () => {
+        if (!autoCycling) return;
+        autoCycling = false;
+        clearInterval(cycleTimer);
+      };
+      ringLabels.forEach((l) => l.addEventListener('click', stopAutoCycle));
+      ripples.forEach((b) => b.addEventListener('click', stopAutoCycle));
     });
   </script>
 </body>
