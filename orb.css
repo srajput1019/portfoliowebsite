@@ -1,0 +1,550 @@
+/* ------------------------------------------------------------------
+   Orb scene — User / System / Strategy.
+   Three rings, latent constellation lines, half-submerged sphere
+   (replacing the cartoon dome), orbiting clickable labels riding the
+   ring paths, and a strategy detail card that updates on selection.
+
+   Designer notes:
+   - The sphere is centered on the disc plane and clipped to its top
+     half via an SVG linear-gradient mask. Reads as "centered presence",
+     not "mascot character". No eyes, no face.
+   - Labels orbit ON the rings (SVG <animateMotion>), not in a side
+     legend. They ARE the ecosystem, not commentary on it.
+   - Other rings stay still on selection. Composure under impact.
+   - Easing: quart-out / quint-out exponential. Never raw `ease`.
+   - Color: OKLCH tinted neutrals. Never #000 or #fff.
+   ------------------------------------------------------------------ */
+
+.orb {
+  /* Tinted neutrals */
+  --orb-fg:        oklch(99% 0.005 290);
+  --orb-fg-soft:   oklch(95% 0.008 290);
+  --orb-fg-mid:    oklch(80% 0.01  290);
+  --orb-fg-deep:   oklch(35% 0.01  290);
+  --orb-shadow:    oklch(8%  0.005 290);
+
+  /* Per-ring accents */
+  --accent-user:     oklch(85% 0.04 80);
+  --accent-system:   oklch(75% 0.06 290);
+  --accent-strategy: oklch(55% 0.07 270);
+
+  --active: transparent;
+
+  --ring-stroke:   var(--orb-fg);
+  --particle:      var(--orb-fg);
+  --halo:          color-mix(in oklch, var(--orb-fg) 35%, transparent);
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  overflow: visible;
+  z-index: 2;
+  background: transparent;
+}
+
+.orb-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  overflow: visible;
+}
+
+/* =========================================================
+   Stars — three phase pools for organic twinkle
+   ========================================================= */
+.orb-stars circle {
+  fill: var(--orb-fg-soft);
+  opacity: 0.45;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.orb-stars .s-blue { fill: var(--lavender, #A59CB8); }
+
+.orb-stars .s-a { animation: orb-twinkle 3.8s var(--ease-in-out) infinite; }
+.orb-stars .s-b { animation: orb-twinkle 5.1s var(--ease-in-out) infinite -1.4s; }
+.orb-stars .s-c { animation: orb-twinkle 6.4s var(--ease-in-out) infinite -3.1s; }
+
+@keyframes orb-twinkle {
+  0%, 100% { opacity: 0.18; transform: scale(0.92); }
+  50%      { opacity: 0.95; transform: scale(1.08); }
+}
+
+/* =========================================================
+   Constellation lines — latent threads between rings.
+   Default opacity bumped so the connections feel sensed,
+   not invisible. On activate they flare to 0.72.
+   ========================================================= */
+.orb-constellation .cline {
+  stroke: var(--orb-fg-soft);
+  stroke-width: 0.7;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.1;
+  transition:
+    opacity      520ms var(--ease-out-quart),
+    stroke       520ms var(--ease-out-quart),
+    stroke-width 520ms var(--ease-out-quart);
+}
+
+.orb.is-active--user .cline[data-pair="user-system"],
+.orb.is-active--system .cline,
+.orb.is-active--strategy .cline[data-pair="system-strategy"] {
+  stroke: var(--active, var(--orb-fg-soft));
+  opacity: 0.72;
+  stroke-width: 1.1;
+}
+
+/* Decision cascade — when an active ring transitions, the matching
+   constellation lines briefly flare brighter, then settle. */
+@keyframes cline-flare {
+  0%   { stroke-width: 1.1; opacity: 0.72; }
+  35%  { stroke-width: 2.2; opacity: 1; }
+  100% { stroke-width: 1.1; opacity: 0.72; }
+}
+.orb.is-cascading.is-active--user .cline[data-pair="user-system"],
+.orb.is-cascading.is-active--system .cline,
+.orb.is-cascading.is-active--strategy .cline[data-pair="system-strategy"] {
+  animation: cline-flare 900ms var(--ease-out-quart);
+}
+
+/* =========================================================
+   Rings — split into back/front halves for depth (sphere
+   sits between the back and front arcs on the disc plane).
+   Wavy ring motion: each ring's two arcs share a cascading
+   ry pulse with phase offset.
+   ========================================================= */
+.orb-rings-back .ring,
+.orb-rings-front .ring {
+  fill: none;
+  stroke: var(--ring-stroke);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition:
+    stroke         420ms var(--ease-out-quart),
+    stroke-opacity 420ms var(--ease-out-quart),
+    stroke-width   420ms var(--ease-out-quart);
+}
+
+/* Main labeled rings */
+.ring--user     { stroke-opacity: 0.7; stroke-width: 1.2; cursor: pointer; }
+.ring--system   { stroke-opacity: 0.5; stroke-width: 1.1; cursor: pointer; }
+.ring--strategy { stroke-opacity: 0.36; stroke-width: 1.1; cursor: pointer; }
+
+/* Texture rings — decorative density between the main rings.
+   Very faint, no interaction, no labels. */
+.ring--texture {
+  stroke-opacity: 0.09;
+  stroke-width: 0.9;
+  pointer-events: none;
+}
+
+/* Wavy motion — cascading wave through ALL rings (3 main + 8 texture).
+   Each ring has its own --wave-amp set per radius (inner rings wave
+   harder, outer rings stay statelier — like a real disc where the
+   inner zone is energetic and the outer zone holds the structure).
+   Animation delays are set inline per element so the wave cascades
+   from inner to outer over ~2.2s. */
+.orb-rings-back .ring,
+.orb-rings-front .ring {
+  --wave-amp: 1.1;
+}
+.orb-rings-back .ring {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: ring-wave 6.4s var(--ease-in-out) infinite;
+}
+.orb-rings-front .ring {
+  transform-box: fill-box;
+  transform-origin: center top;
+  animation: ring-wave 6.4s var(--ease-in-out) infinite;
+}
+
+/* Per-ring amplitude. Inner rings (smaller rx) wave more — closer to
+   the energy core. Outer rings hold steady. */
+.orb-rings-back  .ring:nth-child(1)  { --wave-amp: 1.16; }
+.orb-rings-front .ring:nth-child(1)  { --wave-amp: 1.16; }
+.orb-rings-back  .ring:nth-child(2)  { --wave-amp: 1.14; }
+.orb-rings-front .ring:nth-child(2)  { --wave-amp: 1.14; }
+.orb-rings-back  .ring:nth-child(3)  { --wave-amp: 1.13; }  /* User */
+.orb-rings-front .ring:nth-child(3)  { --wave-amp: 1.13; }
+.orb-rings-back  .ring:nth-child(4)  { --wave-amp: 1.11; }
+.orb-rings-front .ring:nth-child(4)  { --wave-amp: 1.11; }
+.orb-rings-back  .ring:nth-child(5)  { --wave-amp: 1.10; }
+.orb-rings-front .ring:nth-child(5)  { --wave-amp: 1.10; }
+.orb-rings-back  .ring:nth-child(6)  { --wave-amp: 1.09; }  /* System */
+.orb-rings-front .ring:nth-child(6)  { --wave-amp: 1.09; }
+.orb-rings-back  .ring:nth-child(7)  { --wave-amp: 1.08; }
+.orb-rings-front .ring:nth-child(7)  { --wave-amp: 1.08; }
+.orb-rings-back  .ring:nth-child(8)  { --wave-amp: 1.07; }
+.orb-rings-front .ring:nth-child(8)  { --wave-amp: 1.07; }
+.orb-rings-back  .ring:nth-child(9)  { --wave-amp: 1.07; }  /* Strategy */
+.orb-rings-front .ring:nth-child(9)  { --wave-amp: 1.07; }
+.orb-rings-back  .ring:nth-child(10) { --wave-amp: 1.06; }
+.orb-rings-front .ring:nth-child(10) { --wave-amp: 1.06; }
+.orb-rings-back  .ring:nth-child(11) { --wave-amp: 1.05; }
+.orb-rings-front .ring:nth-child(11) { --wave-amp: 1.05; }
+
+@keyframes ring-wave {
+  0%, 100% { transform: scaleY(1)             scaleX(1); }
+  25%      { transform: scaleY(calc((var(--wave-amp) - 1) * 0.5 + 1)) scaleX(0.994); }
+  50%      { transform: scaleY(var(--wave-amp)) scaleX(calc(1 - (var(--wave-amp) - 1) * 0.13)); }
+  75%      { transform: scaleY(calc((var(--wave-amp) - 1) * 0.5 + 1)) scaleX(0.994); }
+}
+
+.orb.is-active--user     .ring--user     { stroke: var(--accent-user);     stroke-opacity: 1; stroke-width: 1.6; }
+.orb.is-active--system   .ring--system   { stroke: var(--accent-system);   stroke-opacity: 1; stroke-width: 1.6; }
+.orb.is-active--strategy .ring--strategy { stroke: var(--accent-strategy); stroke-opacity: 1; stroke-width: 1.6; }
+
+/* Decision cascade — newly-active ring strobes for 900ms */
+@keyframes ring-strobe {
+  0%   { stroke-width: 1.6; filter: brightness(1); }
+  25%  { stroke-width: 3.2; filter: brightness(1.6); }
+  100% { stroke-width: 1.6; filter: brightness(1); }
+}
+.orb.is-cascading.is-active--user     .ring--user,
+.orb.is-cascading.is-active--system   .ring--system,
+.orb.is-cascading.is-active--strategy .ring--strategy {
+  animation: ring-strobe 900ms var(--ease-out-quart);
+}
+
+/* When something is active, dim the others */
+.orb.is-active--user .ring--system,
+.orb.is-active--user .ring--strategy,
+.orb.is-active--system .ring--user,
+.orb.is-active--system .ring--strategy,
+.orb.is-active--strategy .ring--user,
+.orb.is-active--strategy .ring--system {
+  stroke-opacity: 0.16;
+}
+
+/* =========================================================
+   Click ripple — single-shot, JS-driven via Web Animations
+   ========================================================= */
+.click-ripple {
+  fill: none;
+  stroke: var(--active, var(--orb-fg-soft));
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =========================================================
+   Particles
+   ========================================================= */
+.orb-orbits .orbit {
+  fill: var(--particle);
+  animation-name: orb-orbit;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-delay: var(--offset, 0s);
+  filter: drop-shadow(0 0 3px color-mix(in oklch, var(--orb-fg) 65%, transparent))
+          drop-shadow(0 0 8px color-mix(in oklch, var(--orb-fg) 30%, transparent));
+}
+@keyframes orb-orbit {
+  to { offset-distance: 100%; }
+}
+.orbit--user     { offset-path: path('M 120 0 a 120 30 0 1 1 -240 0 a 120 30 0 1 1 240 0'); animation-duration: 14s; }
+.orbit--system   { offset-path: path('M 200 0 a 200 50 0 1 1 -400 0 a 200 50 0 1 1 400 0'); animation-duration: 22s; }
+.orbit--strategy { offset-path: path('M 280 0 a 280 70 0 1 1 -560 0 a 280 70 0 1 1 560 0'); animation-duration: 32s; }
+
+/* Ambient particles — texture-orbit paths, dimmer than main */
+.orb-orbits .orbit[class*="orbit--tx-"] {
+  opacity: 0.55;
+  filter: drop-shadow(0 0 2px color-mix(in oklch, var(--orb-fg) 50%, transparent));
+}
+.orbit--tx-100 { offset-path: path('M 100 0 a 100 25 0 1 1 -200 0 a 100 25 0 1 1 200 0'); animation-duration: 17s; }
+.orbit--tx-142 { offset-path: path('M 142 0 a 142 36 0 1 1 -284 0 a 142 36 0 1 1 284 0'); animation-duration: 19s; }
+.orbit--tx-170 { offset-path: path('M 170 0 a 170 42 0 1 1 -340 0 a 170 42 0 1 1 340 0'); animation-duration: 24s; }
+.orbit--tx-228 { offset-path: path('M 228 0 a 228 57 0 1 1 -456 0 a 228 57 0 1 1 456 0'); animation-duration: 28s; }
+.orbit--tx-255 { offset-path: path('M 255 0 a 255 64 0 1 1 -510 0 a 255 64 0 1 1 510 0'); animation-duration: 33s; }
+.orbit--tx-305 { offset-path: path('M 305 0 a 305 76 0 1 1 -610 0 a 305 76 0 1 1 610 0'); animation-duration: 38s; }
+.orbit--tx-330 { offset-path: path('M 330 0 a 330 82 0 1 1 -660 0 a 330 82 0 1 1 660 0'); animation-duration: 44s; }
+
+/* =========================================================
+   Atmospheric central glow — sits below the rings, large and
+   diffuse, gives the disc plane luminous depth.
+   ========================================================= */
+.orb-atmosphere {
+  fill: color-mix(in oklch, var(--orb-fg) 9%, transparent);
+  filter: blur(40px);
+  opacity: 0.65;
+}
+
+/* =========================================================
+   Half-submerged sphere — replaces the cartoon dome.
+   Top half visible, bottom fades into the disc plane.
+   No eyes, no face — clean abstract presence.
+   ========================================================= */
+.orb-sphere {
+  filter: drop-shadow(0 22px 32px rgba(0,0,0,0.65));
+}
+
+.orb-sphere-body { /* radial-gradient fill set in markup */ }
+
+.orb-sphere-spec {
+  filter: blur(2.5px);
+  pointer-events: none;
+}
+
+.orb-sphere-eye {
+  fill: oklch(12% 0.005 290);
+  filter: drop-shadow(0 0.5px 0 rgba(255, 255, 255, 0.18));
+}
+
+/* Halo — large, diffuse, picks up the active accent */
+.orb-sphere-halo {
+  fill: color-mix(in oklch, var(--active, var(--orb-fg)) 40%, transparent);
+  filter: blur(28px);
+  opacity: 0.95;
+  transition: fill 720ms var(--ease-out-quart);
+}
+
+/* =========================================================
+   Orbiting ring labels — clickable buttons on each ring.
+   They orbit slowly (Kepler scaling) and stay clickable;
+   active state changes color/weight without pausing the orbit.
+   ========================================================= */
+.ring-label {
+  cursor: pointer;
+  outline: none;
+}
+.ring-label-bg {
+  fill: color-mix(in oklch, oklch(8% 0.005 290) 92%, transparent);
+  stroke: color-mix(in oklch, var(--orb-fg) 55%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition:
+    fill         360ms var(--ease-out-quart),
+    stroke       360ms var(--ease-out-quart),
+    stroke-width 360ms var(--ease-out-quart);
+  /* Subtle pulse — tells the user "this is interactive" without being
+     loud about it. Stops on hover so it doesn't compete. */
+  animation: label-affordance 2.4s var(--ease-in-out) infinite;
+}
+.ring-label:hover .ring-label-bg,
+.ring-label:focus-visible .ring-label-bg {
+  animation: none;
+  stroke: color-mix(in oklch, var(--orb-fg) 90%, transparent);
+  stroke-width: 1.5;
+}
+.ring-label:focus-visible .ring-label-bg {
+  /* Distinct keyboard focus — outline ring matches active accent */
+  stroke: color-mix(in oklch, var(--orb-fg) 100%, transparent);
+  stroke-width: 2;
+}
+@keyframes label-affordance {
+  0%, 100% { stroke-opacity: 1;   stroke-width: 1; }
+  50%      { stroke-opacity: 0.5; stroke-width: 1.6; }
+}
+
+/* Eye glance — eyes shift toward the active label, JS sets --eye-tx/--eye-ty */
+.orb-sphere-eye {
+  transform: translate(var(--eye-tx, 0), var(--eye-ty, 0));
+  transition: transform 320ms var(--ease-out-quart);
+}
+
+.ring-label-text {
+  fill: color-mix(in oklch, var(--orb-fg) 96%, transparent);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: var(--font-sans, 'Inter'), system-ui;
+  pointer-events: none;
+  transition: fill 360ms var(--ease-out-quart);
+}
+
+/* Hover: brighten label and its ring */
+.ring-label:hover .ring-label-bg,
+.ring-label:focus-visible .ring-label-bg {
+  stroke: color-mix(in oklch, var(--orb-fg) 70%, transparent);
+  stroke-width: 1.2;
+}
+.ring-label:hover .ring-label-text,
+.ring-label:focus-visible .ring-label-text {
+  fill: var(--orb-fg);
+}
+
+/* Active state — match the per-ring accent */
+.orb.is-active--user     .ring-label[data-ring="user"]     .ring-label-bg { fill: color-mix(in oklch, var(--accent-user) 22%, oklch(8% 0.005 290)); stroke: var(--accent-user); stroke-width: 1.4; }
+.orb.is-active--system   .ring-label[data-ring="system"]   .ring-label-bg { fill: color-mix(in oklch, var(--accent-system) 22%, oklch(8% 0.005 290)); stroke: var(--accent-system); stroke-width: 1.4; }
+.orb.is-active--strategy .ring-label[data-ring="strategy"] .ring-label-bg { fill: color-mix(in oklch, var(--accent-strategy) 22%, oklch(8% 0.005 290)); stroke: var(--accent-strategy); stroke-width: 1.4; }
+
+.orb.is-active--user     .ring-label[data-ring="user"]     .ring-label-text,
+.orb.is-active--system   .ring-label[data-ring="system"]   .ring-label-text,
+.orb.is-active--strategy .ring-label[data-ring="strategy"] .ring-label-text {
+  fill: oklch(96% 0.01 290);
+}
+
+/* Active-ring accent token drives --active for halo + ripple */
+.orb.is-active--user     { --active: var(--accent-user); }
+.orb.is-active--system   { --active: var(--accent-system); }
+.orb.is-active--strategy { --active: var(--accent-strategy); }
+
+/* =========================================================
+   Strategy detail card — sits below the orb in .hero-right.
+   Crossfades on ring select, no card border (just a leading
+   rule + tabular numeric counter).
+   ========================================================= */
+.orb-detail {
+  /* Sits closely under the orb so the cause-effect link reads. The
+     active accent rule above the meta acts as the connector to the
+     orb's halo (which carries the same accent). */
+  margin-top: -0.5rem;
+  padding: 0;
+  max-width: 38rem;
+  font-family: var(--font-sans, 'Inter'), system-ui;
+  position: relative;
+}
+
+/* Connector — a thin vertical thread from the orb to the detail card,
+   tinted with the active accent. Visible only when something is active. */
+.orb-detail::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1.4rem;
+  width: 1px;
+  height: 1.4rem;
+  background: var(--active, transparent);
+  opacity: 0.6;
+  transition: background 720ms var(--ease-out-quart);
+}
+
+/* Content slide + fade transition driven by .is-fading toggle */
+.orb-detail-meta,
+.orb-detail-body,
+.orb-detail-link {
+  transition:
+    opacity   280ms var(--ease-out-quart),
+    transform 280ms var(--ease-out-quart);
+}
+.orb-detail.is-fading .orb-detail-meta,
+.orb-detail.is-fading .orb-detail-body,
+.orb-detail.is-fading .orb-detail-link {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.orb-detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.85rem;
+  padding-top: 1rem;
+}
+.orb-detail-rule {
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--active, var(--bone, #F4EFEA));
+  transition: background 720ms var(--ease-out-quart);
+}
+.orb-detail-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone, #F4EFEA);
+  font-weight: 500;
+}
+.orb-detail-num {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: color-mix(in oklch, var(--lavender, #A59CB8) 80%, transparent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.orb-detail-body {
+  font-family: var(--font-serif, 'GT Sectra'), Georgia, serif;
+  font-size: clamp(1.05rem, 1.2vw, 1.18rem);
+  line-height: 1.55;
+  color: color-mix(in oklch, var(--bone, #F4EFEA) 92%, transparent);
+  margin: 0;
+  font-style: italic;
+}
+
+.orb-detail-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--bone, #F4EFEA);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklch, var(--bone, #F4EFEA) 30%, transparent);
+  padding-bottom: 0.35rem;
+  transition:
+    color        320ms var(--ease-out-quart),
+    border-color 320ms var(--ease-out-quart);
+}
+.orb-detail-link:hover {
+  color: var(--lavender, #A59CB8);
+  border-color: var(--lavender, #A59CB8);
+}
+
+/* =========================================================
+   Thesis-word linkage — the words "user / system / strategy"
+   in the hero H1 highlight when their ring is active. The
+   page demonstrates its own thesis literally.
+   ========================================================= */
+.thesis-word {
+  position: relative;
+  color: inherit;
+  transition: color 420ms var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1));
+  white-space: nowrap;
+}
+.thesis-word::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -0.05em;
+  height: 0.06em;
+  background: var(--thesis-accent, currentColor);
+  transition:
+    right 540ms var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)),
+    background 540ms var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1));
+  border-radius: 1px;
+}
+.thesis-word.is-active {
+  color: var(--thesis-accent, var(--bone, #F4EFEA));
+}
+.thesis-word.is-active::after {
+  right: 0;
+}
+.thesis-word.is-active[data-ring="user"]     { --thesis-accent: oklch(85% 0.04 80);  }
+.thesis-word.is-active[data-ring="system"]   { --thesis-accent: oklch(75% 0.06 290); }
+.thesis-word.is-active[data-ring="strategy"] { --thesis-accent: oklch(55% 0.07 270); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .orb-stars circle,
+  .orb-orbits .orbit,
+  .orb-rings-back .ring,
+  .orb-rings-front .ring,
+  .ring-label animateMotion {
+    animation: none;
+  }
+  .orb-orbits .orbit { offset-distance: 22%; }
+}
+
+/* Mobile — content card stacks naturally below the orb */
+@media (max-width: 768px) {
+  .orb-detail {
+    text-align: left;
+    max-width: 100%;
+  }
+}
