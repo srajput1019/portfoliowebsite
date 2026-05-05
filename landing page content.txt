@@ -1,0 +1,174 @@
+Shrutika Rajput Portfolio
+Landing Page Content
+Final copy draft for Claude Design layout exploration
+
+01 — Navigation
+Shrutika Rajput
+Work
+About
+Contact
+
+02 — Hero
+Small name
+Shrutika Rajput
+
+Small title
+Product Designer · AI Strategist · Systems Thinker
+
+Main hero bio — largest text
+Every decision I make is designed to radiate through the user, the system, and the strategy that connects them.
+
+Supporting line
+I design human-centered AI, product experiences, and strategic systems that make complexity usable.
+
+CTAs
+View Work →
+About Me
+
+Hero animation buttons
+User
+System
+Strategy
+
+User microcopy
+The person using it should never feel like the system is smarter than them.
+
+System microcopy
+If the system needs a 45-minute explanation, the design is not done.
+
+Strategy microcopy
+Strategy is where the idea survives contact with reality.
+
+03 — Featured Work
+Section title
+Featured Work
+
+Section subtitle
+Four projects across AI, systems, strategy, and physical product design.
+
+Project 1 — Qlarc
+Category
+STRATEGY / AI GOVERNANCE
+
+Project title
+Qlarc
+
+One-liner
+An AI procurement toolkit for turning governance chaos into buyer-ready clarity.
+
+CTA
+View Project →
+
+Hover text only
+Governance evidence, but make it less terrifying.
+
+Instruction: Hover should reveal only the witty line. No diagram, no path, no metric, no paragraph.
+
+Project 2 — Swaatya
+Category
+AI SYSTEMS / HUMAN-IN-THE-LOOP
+
+Project title
+Swaatya
+
+One-liner
+A human-in-the-loop AI experience for making assisted decisions visible, measurable, and overrideable.
+
+CTA
+View Project →
+
+Hover text only
+Human override, because blind trust is not a feature.
+
+Instruction: Hover should reveal only the witty line. No diagram, no path, no metric, no paragraph.
+
+Project 3 — Mura
+Category
+PHYSICAL PRODUCT / SUSTAINABLE EXPERIENCE
+
+Project title
+Mura
+
+One-liner
+A sunlight-heated thermal pillow designed for comfort without electronics.
+
+CTA
+View Project →
+
+Hover text only
+Warmth that lingers.
+
+Instruction: Hover should reveal only the witty line. No diagram, no path, no metric, no paragraph.
+
+Project 4 — LTI
+Category
+SYSTEMS STRATEGY / FRAMEWORK DESIGN
+
+Project title
+LTI
+
+One-liner
+A framework for mapping power, visibility, and representation gaps in leadership.
+
+CTA
+View Project →
+
+Hover text only
+Because "we support equity" needed a receipt.
+
+Instruction: Hover should reveal only the witty line. No diagram, no path, no metric, no paragraph.
+
+04 — Receipts
+Section title
+The Receipts
+
+Section subtitle
+Proof, because vibes are not a KPI.
+
+50–70% procurement cycle reduction target
+Qlarc
+
+>70% evidence reuse target
+Qlarc
+
+5+ data categories consolidated
+Swaatya / AI-powered SLO Observability
+
+3 rounds of stakeholder iteration
+Swaatya / Human-in-the-loop product design
+
+4 leadership tiers mapped
+LTI
+
+05 — Work Routing Line
+Here for the product people use?
+View Product UX work →
+
+Here for the system behind it?
+View Strategy work →
+
+06 — About Teaser
+Hook
+The unofficial version
+
+Short copy
+A few things the work won't tell you — wrong turns, New York, and the instinct to ask why.
+
+Small line
+Still in beta. Shipping anyway.
+
+CTA
+Get to know me →
+
+07 — Final CTA
+Let's build systems people can trust.
+Preferably before the system starts explaining itself badly.
+Let's connect →
+
+Content Rules
+• Main hero bio should be larger than the name and title.
+• Hero animation buttons must sit below the animation, not beside the bio.
+• Featured project cards should not include metrics.
+• Project hover state should reveal only the witty text.
+• Receipts should come after Featured Work.
+• About teaser should feel personal and clickable, not work-related.

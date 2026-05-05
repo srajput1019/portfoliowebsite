@@ -1,0 +1,184 @@
+/* =========================================================
+   IMPECCABLE LEVEL 10: THE STRATEGIC DOSSIER
+   Skills: @impeccable @ui-ux-pro-max
+   Color Strategy: Restrained (Deep Ink & Bone)
+   Layout: Clear, Recruiter-Friendly, High-End Editorial
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+  /* OKLCH Palette - Highly professional, warm deep dark */
+  --ink: oklch(0.18 0.01 290);
+  --ink-surface: oklch(0.22 0.01 290);
+  --ink-elevated: oklch(0.28 0.01 290);
+  
+  --bone: oklch(0.96 0.01 90);
+  --bone-muted: oklch(0.75 0.02 90);
+  
+  --lavender: oklch(0.80 0.04 290);
+  
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Manrope', system-ui, sans-serif;
+  
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-base: 400ms;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background-color: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--lavender); color: var(--ink); }
+a { text-decoration: none; color: inherit; }
+button { background: none; border: none; cursor: pointer; font: inherit; }
+
+/* ── Typography ── */
+.witty-serif { font-family: var(--font-serif); font-style: italic; color: var(--lavender); font-size: clamp(1.75rem, 2.5vw, 2.5rem); line-height: 1.1; }
+.display-huge { font-family: var(--font-serif); font-size: clamp(3.5rem, 6vw, 6.5rem); line-height: 1; font-weight: 400; letter-spacing: -0.02em; }
+.display-lg { font-family: var(--font-serif); font-size: clamp(2.5rem, 4vw, 4.5rem); line-height: 1.05; font-weight: 400; }
+.display-md { font-family: var(--font-serif); font-size: clamp(2rem, 3.5vw, 3.5rem); line-height: 1.1; font-weight: 400; }
+.label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--bone-muted); }
+.p-large { font-size: clamp(1.125rem, 1.5vw, 1.25rem); color: var(--bone-muted); max-width: 60ch; line-height: 1.6; }
+
+.container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem); }
+.section { padding: clamp(6rem, 12vh, 10rem) 0; }
+
+/* ── Navigation ── */
+.nav { padding: 2.5rem 0; position: fixed; width: 100%; top: 0; z-index: 100; mix-blend-mode: difference; }
+.nav .container { display: flex; justify-content: space-between; align-items: center; }
+.nav-logo { font-family: var(--font-serif); font-style: italic; font-size: 1.75rem; color: #FFF; }
+.nav-links { display: flex; gap: 3rem; }
+.nav-link { font-size: 0.875rem; font-weight: 500; color: #FFF; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6; transition: opacity var(--duration-base) var(--ease-out); }
+.nav-link:hover { opacity: 1; }
+
+/* ── Hero ── */
+.hero { min-height: 100vh; display: flex; align-items: center; padding-top: 4rem; position: relative; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(4rem, 8vw, 6rem); align-items: center; width: 100%; }
+.hero-left { display: flex; flex-direction: column; gap: 2rem; }
+
+.hero-right { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; }
+.hero-3d-stage { width: 100%; aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+.stage-glow { position: absolute; width: 50%; height: 50%; border-radius: 50%; background: radial-gradient(circle, var(--lavender) 0%, transparent 60%); filter: blur(60px); opacity: 0.15; z-index: 1; }
+spline-viewer { width: 100%; height: 100%; position: relative; z-index: 2; display: block; }
+
+/* ── Impeccable Featured Work: The Strategic Dossier ── */
+.work-header { margin-bottom: 6rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; }
+.work-list { display: flex; flex-direction: column; }
+
+/* The Dossier Layout: Clear, Recruiter-Friendly, Elegant */
+.dossier { 
+  display: grid; 
+  grid-template-columns: 1.2fr 1fr; 
+  gap: clamp(4rem, 8vw, 6rem); 
+  align-items: center; 
+  padding: 8rem 0; 
+  border-bottom: 1px solid var(--border); 
+}
+.dossier:last-child { border-bottom: none; }
+
+/* Rhythm: Alternate image placement for balance */
+.dossier:nth-child(even) { grid-template-columns: 1fr 1.2fr; direction: rtl; }
+.dossier:nth-child(even) > * { direction: ltr; }
+
+/* The Image Frame */
+.dossier-image { 
+  width: 100%; 
+  background: var(--ink-surface); 
+  border-radius: 4px; 
+  position: relative; 
+  overflow: hidden; 
+  border: 1px solid var(--border-strong);
+}
+.dossier:nth-child(1) .dossier-image { aspect-ratio: 16/10; }
+.dossier:nth-child(2) .dossier-image { aspect-ratio: 4/3; }
+.dossier:nth-child(3) .dossier-image { aspect-ratio: 1/1; }
+.dossier:nth-child(4) .dossier-image { aspect-ratio: 21/9; }
+
+.placeholder-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--bone-muted); font-size: 0.75rem; letter-spacing: 0.1em; font-family: monospace; opacity: 0.5; }
+
+/* The Content Block */
+.dossier-info { display: flex; flex-direction: column; gap: 2rem; }
+.dossier-meta { display: flex; gap: 1.5rem; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+.meta-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--bone-muted); }
+
+.dossier-title { font-family: var(--font-sans); font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 400; color: var(--bone); line-height: 1; letter-spacing: -0.02em; }
+.dossier-copy { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.btn-case-study { 
+  display: inline-flex; align-items: center; margin-top: 1rem; 
+  font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; 
+  color: var(--bone); border: 1px solid var(--border-strong); 
+  padding: 1rem 2rem; border-radius: 100px;
+  width: fit-content; transition: all var(--duration-base) var(--ease-out); 
+}
+.btn-case-study:hover { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+
+/* ── The Receipts (Architectural Data) ── */
+.receipts-header { margin-bottom: 6rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+.receipts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6rem; }
+.receipt-item { display: flex; flex-direction: column; gap: 1rem; }
+.receipt-num { font-family: var(--font-serif); font-size: clamp(5rem, 8vw, 8rem); line-height: 0.9; color: var(--bone); font-weight: 400; letter-spacing: -0.02em; }
+.receipt-meta { display: flex; flex-direction: column; gap: 0.5rem; }
+.receipt-project { font-size: 0.75rem; color: var(--lavender); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+.receipt-desc { font-size: 1.125rem; color: var(--bone-muted); max-width: 30ch; line-height: 1.5; }
+
+/* ── Work Routing ── */
+.routing { margin: 8rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; }
+.route-link { padding: 8rem 4rem; display: flex; flex-direction: column; justify-content: center; gap: 2rem; border-right: 1px solid var(--border); transition: background var(--duration-base) var(--ease-out); cursor: pointer; }
+.route-link:last-child { border-right: none; }
+.route-link:hover { background: var(--ink-surface); }
+.route-title { font-family: var(--font-serif); font-style: italic; font-size: clamp(2.5rem, 4vw, 4rem); color: var(--bone-muted); transition: color var(--duration-base) var(--ease-out); display: flex; justify-content: space-between; align-items: center; }
+.route-link:hover .route-title { color: var(--lavender); }
+
+/* ── About Teaser (Minimalist Artifact) ── */
+.about-teaser { padding-bottom: 6rem; }
+.about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(4rem, 8vw, 8rem); align-items: center; }
+.about-text { display: flex; flex-direction: column; gap: 2.5rem; max-width: 45rem; }
+
+/* Mobile Mockup - Pure Impeccable Craft */
+.mockup-container { display: flex; justify-content: center; align-items: center; }
+.phone-artifact { 
+  width: 320px; height: 650px; border-radius: 44px; 
+  background: var(--ink-surface); 
+  border: 1px solid rgba(255,255,255,0.15); 
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 0 6px var(--ink);
+  position: relative; overflow: hidden; 
+  display: flex; flex-direction: column; align-items: center;
+}
+.phone-artifact::before {
+  content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 60px; height: 6px; border-radius: 10px; background: rgba(255,255,255,0.05);
+}
+.mockup-content {
+  flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  background-image: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 60%);
+}
+
+/* ── Final CTA ── */
+.final-cta { text-align: center; padding-bottom: 12rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 4rem; }
+  .hero-right { order: -1; max-width: 400px; margin: 0 auto; }
+  .hero { min-height: auto; padding-top: 8rem; }
+  
+  .dossier, .dossier:nth-child(even) { grid-template-columns: 1fr; direction: ltr; padding: 6rem 0; gap: 3rem; }
+  .dossier-image { order: -1; }
+  
+  .receipts-grid { grid-template-columns: 1fr; gap: 4rem; }
+  .routing { grid-template-columns: 1fr; }
+  .route-link { border-right: none; border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
+  .route-link:last-child { border-bottom: none; }
+  
+  .about-grid { grid-template-columns: 1fr; gap: 6rem; }
+  .mockup-container { order: -1; }
+}
